@@ -1,0 +1,141 @@
+.pc-sidebar{
+    overflow-y: scroll;
+}
+.navbar-wrapper{
+    background:  white !important;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px !important;
+}
+.navbar-content{
+    height: 100vh !important;
+}
+.admin_header_sider li{
+    display: flex;
+    align-items:  center;
+}
+.admin_header_sider li path{
+    color: #30C2EC;
+}
+
+.admin_header_sider li .pc-mtext{
+    color: gray;
+    font-size: 12px;
+    font-weight: 600;
+}
+body{
+    background: #F4F7FA !important;
+}
+a {
+    text-decoration: none !important;
+  }
+/* Toàn bộ thanh cuộn */
+::-webkit-scrollbar {
+    width: 5px;  /* Độ rộng thanh cuộn dọc */
+    height: 5px; /* Độ rộng thanh cuộn ngang */
+  }
+  
+  /* Nền của thanh cuộn */
+  ::-webkit-scrollbar-track {
+    background: white; /* Màu nền */
+    border-radius: 10px;
+  }
+  
+  /* Phần trượt của thanh cuộn */
+  ::-webkit-scrollbar-thumb {
+    background: white; /* Màu thanh cuộn */
+    border-radius: 10px; /* Bo tròn */
+  }
+  
+  /* Khi di chuột vào */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #30C2EC;
+  }
+  
+  .ant-card{
+    box-shadow: #88a5bf7a 6px 2px 16px, #fffc -6px -2px 16px !important;
+}
+
+
+.ant-btn{
+  background: #30C2EC ;
+  color : white ;
+  border: 1px solid white;
+}
+.ant-btn:hover{
+  background: white !important;
+  color: #30C2EC !important;
+  border: 1px solid #30C2EC !important ;
+}
+button:hover{
+  background: white !important;
+  color: #30C2EC !important;
+  border: 1px solid #30C2EC !important ;
+}
+
+.ant-input-search-button:hover{
+  background: #30C2EC ;
+  color : white ;
+  border: 1px solid white;
+}
+
+.ant-input-search-button svg{
+  color: white ;
+
+}
+
+.ant-picker-range{
+  border: 2px solid #30C2EC ;
+}
+
+
+.css_list_ctm{
+  font-size: 12px;
+  color : white;
+  padding: 6px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.css_list_ctm.good{
+  background: #00A330;
+}
+
+.css_list_ctm.bad{
+  background: #F94B4D;
+}
+
+.css_list_ctm.reserve{
+  background: #FAAD14;
+}
+
+.role_user_y label{
+  color : gray;
+  font-weight: 600;
+}
+.role_user_y input{
+  border: 3px solid #30C2EC !important;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.role_user_y .card-body{
+  height: 150px;
+}
+.role_user_y .ant-card-head-title{
+  color: #30C2EC;
+}
+
+
+.swal2-styled.swal2-confirm{
+  background: #30C2EC !important;
+  color: white !important;
+  border: 1px solid white !important;
+}
+
+
+
+.swal2-styled.swal2-confirm:hover{
+  background: white !important;
+  color: #30C2EC !important;
+  border: 1px solid white !important;
+}
