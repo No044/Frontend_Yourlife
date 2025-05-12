@@ -1,4 +1,4 @@
-const domain = "http://localhost:3001/api/v1/";
+const domain = process.env.BACKEND_URL;
 
 export const GetData = async (path) => {
     try {
