@@ -44,4 +44,5 @@ jobs:
             echo "IMAGE_NAME=${{ env.IMAGE_NAME }}" > .env
             docker-compose pull frontend
             docker-compose up -d --remove-orphans frontend
+            docker image prune -a -f
           EOF
