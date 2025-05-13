@@ -6,6 +6,7 @@ on:
 
 env:
   IMAGE_NAME: minhnghia12305/frontend-yourlife
+  REACT_APP_BACKEND_URL: http://backend_yourlife:3001/api/v1/
 
 jobs:
   build-and-push:
@@ -22,7 +23,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t $IMAGE_NAME:latest .
+          docker build --build-arg REACT_APP_BACKEND_URL=${{ env.REACT_APP_BACKEND_URL }} -t $IMAGE_NAME:latest .
 
       - name: Push Docker image
         run: |
