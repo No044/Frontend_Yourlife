@@ -6,7 +6,7 @@ on:
 
 env:
   IMAGE_NAME: minhnghia12305/frontend-yourlife
-  REACT_APP_BACKEND_URL: http://backend_yourlife:3001/api/v1/
+  REACT_APP_BACKEND_URL: http://localhost:3001/api/v1/
 
 jobs:
   build-and-push:
