@@ -42,6 +42,7 @@ function Detailpkctm_Y() {
 
     const FetchAPI = async () => {
         const respond = await GetCTM_PK(id, idtypes)
+        console.log(respond)
         if (respond.status == true && Array.isArray(respond.data)) {
             const newdata = respond.data.map((item, index) => {
                 return (
@@ -49,7 +50,7 @@ function Detailpkctm_Y() {
                         key: item._id || index,
                
                         index: index + 1,
-                        NameCTM: item.CTM_id.FullName,
+                        NameCTM: item?.CTM_id?.FullName,
                         NamePack: item.Package_id.Name,
                         Duration : item.Package_id.Duration,
                         createAt: item.CreateAt,
@@ -74,7 +75,12 @@ function Detailpkctm_Y() {
         const check = await AlertAgree("Bạn có muốn thay đổi", "Đồng Ý", "Xác Nhận Hành Động")
         if (check.isConfirmed) {
             const respond = await changeStatusPKC({id : e})
-            FetchAPI()
+            if (respond.status == true) {
+                AlertSuccess("Thao Tác Thành Công")
+                FetchAPI()
+            }
+            handle_error(respond, navigate)
+
         }
     }
 
@@ -82,7 +88,7 @@ function Detailpkctm_Y() {
         FetchAPI()
     }, [])
     return (<>
-        <Header_Y content={"Danh Sách Sử Dụng Dịch Vụ"} />
+        <Header_Y content={idtypes == "pkctm" ? "Danh Sách Sử Dụng Gói Tập" : "Danh Sách Gói Tập Sử Dụng"} />
         <Row style={{ marginTop: "30px" }}>
             <Col span={24}>
                 <Search_Component FetchAPI={FetchAPI} type="3" name={{ Active: "Đã Thanh Toán", inActive: "Chưa Thanh Toán" }} />

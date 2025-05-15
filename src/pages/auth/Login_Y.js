@@ -14,6 +14,7 @@ function Login_Y(){
            password : e.target[1].value
         }
         const respond = await PostLogin(auth)
+        console.log(respond)
         if(respond.status == true && respond.type == "Login"){
           AlertSuccess("Đăng Nhập Thành Công")
           setTimeout(() => {
@@ -41,7 +42,7 @@ function Login_Y(){
                 <form onSubmit={handle_auth_login} method="POST">
                   <div className="form-group">
                     <div className="fxt-transformY-50 fxt-transition-delay-1">
-                      <input type="email" id="email" className="form-control" name="email" placeholder="Email" required="required" />
+                      <input type="input" id="input" className="form-control" name="input" placeholder="input" required="required" />
                     </div>
                   </div>
                   <div className="form-group">

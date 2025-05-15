@@ -2,6 +2,7 @@ const domain = "http://localhost:3001/api/v1/";
 
 export const GetData = async (path) => {
     try {
+        
         const response = await fetch(domain + path, {
             method: "GET",
             headers: {
@@ -11,18 +12,15 @@ export const GetData = async (path) => {
             credentials: "include",
         });
 
-
-
         return await response.json();
     } catch (error) {
+        console.log(error)
         return {
             status: false,
             type: "Auth",
             error: 600,
             data: null
         }
-
-
     }
 };
 

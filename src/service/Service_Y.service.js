@@ -1,9 +1,11 @@
 import { GetData,PatchData,PostData } from "../Utils/Request";
 
-export const GetAllService = async() => {
+export const GetAllService = async(type = true) => {
     const params = new URLSearchParams(window.location.search)
-    params.key = params.get("key")
-    params.status = params.get("status")
+    if(type == true){
+        params.key = params.get("key")
+       params.status = params.get("status")
+    }
     const key = params?.key ?? ""; 
     const status = params?.status ?? 1
     const data = await GetData(`service/Getall?key=${key}&&status=${status}`)
@@ -37,5 +39,11 @@ export const Getdetail = async(id) => {
  
 export const changstatusService = async(option) => {
     const data = await PatchData(`service/changestatus`,option)
+    return data
+ }
+
+
+ export const DeletedSV = async (option) => {
+    const data = await PatchData(`service/deleted`, option)
     return data
  }

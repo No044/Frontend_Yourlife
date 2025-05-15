@@ -10,13 +10,20 @@ import Add_Package from "../pages/Package/Add_package_Y"
 import Edit_package from "../pages/Package/Edit_package_Y"
 import Login_Y from "../pages/auth/Login_Y"
 import Authentication from "../Components/Private/Authentication"
-import Create_User from "../pages/Role/Create_User_Y"
-import Create_Role from "../pages/Role/Role_User_Y"
+import Permission_Role from "../pages/Role/Permission_Role_Y"
 import List_Service from "../pages/Service/List_Service_Y"
 import Add_Service from "../pages/Service/Add_Service_Y"
 import Edit_service from "../pages/Service/Edit_service_Y"
 import Detailsvctm_Y from "../pages/Service/detailsvctm_Y"
 import Detailpkctm_Y from "../pages/Package/detailpkctm_Y"
+import List_User_Y from "../pages/user/List_User_Y"
+import List_Role_Y from "../pages/Role/List_Role_Y"
+import Add_role from "../pages/Role/Add_Role_Y"
+import Edit_role from "../pages/Role/Edit_Role_Y"
+import Add_user from "../pages/user/Add_user_Y"
+import List_HS_Y from "../pages/History/List_HS_Y"
+import List_Chart from "../pages/chart/List_chart_Y"
+import Page404_Y from "../pages/Overview/404_Y"
 export const routers = [
   {
     element: <Authentication />,
@@ -37,7 +44,7 @@ export const routers = [
                 element: <List_customer />
               },
               {
-                path: "add",
+                path: "add/:id",
                 element: <Add_CTM />
               },
               {
@@ -93,15 +100,58 @@ export const routers = [
             ]
           },
           {
-            path : "/Create",
+            path : "/user",
             children : [
               {
-                path : "User",
-                element : <Create_User/>
+                index : true,
+                element : <List_User_Y/>
               },
               {
-                path : "role",
-                element : <Create_Role/>
+                path : "add",
+                element : <Add_user/>
+              }
+            ]
+          },{
+            path : "/role",
+            children : [
+              {
+                index : true,
+                element : <List_Role_Y/>
+              },
+              {
+                path : "add",
+                element : <Add_role/>
+              },
+              {
+                path : "edit/:id",
+                element : <Edit_role/>
+              }
+            ]
+          },
+          {
+            path : "/Permission_Role",
+            children : [
+              {
+                index : true,
+                element : <Permission_Role/>
+              }
+            ]
+          },
+          {
+            path : "/chart",
+            children : [
+              {
+                index : true,
+                element : <List_Chart/>
+              }
+            ]
+          },
+          {
+            path : "/history",
+            children : [
+              {
+                index : true,
+                element : <List_HS_Y/>
               }
             ]
           }
@@ -118,6 +168,10 @@ export const routers = [
         element: <Login_Y />
       }
     ]
+  },
+  {
+    path : "*",
+    element : <Page404_Y />
   }
 ]
 function Allrouter() {

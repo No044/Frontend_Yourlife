@@ -6,11 +6,12 @@ import { Button, Select, Checkbox, Form, Input, Row, Col, Card } from 'antd';
 import { useState,useEffect } from 'react';
 import { GetAllPackage } from '../../service/Package_Y.service';
 import { PostCTM } from '../../service/CTM_Y.service';
-import { useNavigate, Link } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import {  AlertSuccess } from '../../Components/Piece/Alert';
 import { useSelector } from "react-redux";
 import { selectRole, selectPermission  } from "../../Redux/UserRedux_Y";
 function Add_CTM(){
+    const { id } = useParams()
     const permission = useSelector(selectPermission)
     const role = useSelector(selectRole)
     const [DataPackage,setDatapackage] = useState(null)
@@ -65,12 +66,28 @@ function Add_CTM(){
                         wrapperCol={{
                             span: 24,
                         }}
-
+                        initialValues={{
+                            id_fingerprint: id
+                          }}
                         layout="horizontal"
                         key={"1"}
                         onFinish={handle_Submit_form_create_course}
                     >
                         <Row gutter={32}>
+                        <Col span={12}>
+                                <Form.Item
+                                    label="ID Vân Tây"
+                                    name="id_fingerprint"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Please input your Data!',
+                                        },
+                                    ]}
+                                >
+                                   <Input readOnly />
+                                </Form.Item>
+                            </Col>
                             <Col span={12}>
                                 <Form.Item
                                     label="Họ Và Tên"

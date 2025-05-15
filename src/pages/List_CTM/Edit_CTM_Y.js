@@ -18,7 +18,7 @@ function Edit_CTM() {
     const navigate = useNavigate()
     authorize(permission, "edit_customer", navigate, role)
     const FetchAPI = async () => {
-        const respond = await GetDetail( id)
+        const respond = await GetDetail(id)
         if (respond.status == true) {
             SetDataCTM(respond.data)
             setDataTinymce(respond.data.Description)
@@ -38,7 +38,7 @@ function Edit_CTM() {
     }, [])
     return (
         <>
-            <Header_Y content={"Sửa Khách Hàng"} />
+            <Header_Y content={"Sửa Thông Tin Khách Hàng"} />
             <Card title="Edit Your Course"
                 bordered={true}
                 style={{
@@ -101,7 +101,7 @@ function Edit_CTM() {
                             </Col>
                             <Col span={24}>
                                 <Button type="primary" style={{ float: 'right', padding: "20px", marginTop: "30px" }} htmlType="submit">
-                                    Đăng Ký
+                                    Thao Tác
                                 </Button>
                             </Col>
                         </Row>

@@ -7,8 +7,7 @@ import { selectRole, selectPermission } from "../../Redux/UserRedux_Y";
 import { useState, useEffect, useRef } from "react";
 import { changeStatusSVC, GetCTM_SV } from "../../service/CTM_SV_Y.service";
 import { Navigate, useNavigate, useParams, Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenRuler, faTrashCan, faEye } from "@fortawesome/free-solid-svg-icons";
+
 import Search_Component from "../../Components/Piece/Search";
 import { AlertAgree, AlertSuccess } from "../../Components/Piece/Alert";
 
@@ -42,7 +41,6 @@ function Detailsvctm_Y() {
         { title: "Ngày Thanh Toán", dataIndex: "updateAt" },
 
     ];
-
     const type =
         [
             { value: 'pay', label: 'Thanh Toán' },
@@ -112,7 +110,7 @@ function Detailsvctm_Y() {
         FetchAPI()
     }, [])
     return (<>
-        <Header_Y content={"Danh Sách Sử Dụng Dịch Vụ"} />
+        <Header_Y content={idtypes == "svctm" ? "Danh Sách Sử Dụng Dịch Vụ" : "Danh Sách Dịch Vụ Sử Dụng"} />
         <Row style={{ marginTop: "30px" }}>
             <Col span={24}>
                 <Search_Component FetchAPI={FetchAPI} type="3" name={{ Active: "Đã Thanh Toán", inActive: "Chưa Thanh Toán" }} />
