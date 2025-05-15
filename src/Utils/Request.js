@@ -1,29 +1,7 @@
 const domain = process.env.REACT_APP_BACKEND_URL;
 console.log("===domain:", domain);
-export const GetData = async (path) => {
-<<<<<<< HEAD
-    try {
-        
-        const response = await fetch(domain + path, {
-            method: "GET",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-            },
-            credentials: "include",
-        });
 
-        return await response.json();
-    } catch (error) {
-        console.log(error)
-        return {
-            status: false,
-            type: "Auth",
-            error: 600,
-            data: null
-        }
-    }
-=======
+export const GetData = async (path) => {
   try {
     const response = await fetch(domain + path, {
       method: "GET",
@@ -36,6 +14,7 @@ export const GetData = async (path) => {
 
     return await response.json();
   } catch (error) {
+    console.log(error)
     return {
       status: false,
       type: "Auth",
@@ -43,7 +22,6 @@ export const GetData = async (path) => {
       data: null,
     };
   }
->>>>>>> 210a52fcb54ea3e5abad14c00e02718f2936b1c9
 };
 
 export const PostData = async (path, option) => {

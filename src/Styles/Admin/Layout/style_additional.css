@@ -25,6 +25,13 @@ body.light {
     color: #30C2EC;
 }
 
+.header_slider path{
+  color: #30C2EC;
+}
+
+.header_slider svg{
+  font-size: 19px !important;
+}
 
 .overview .icon{
   background-color: #e6f7ff;

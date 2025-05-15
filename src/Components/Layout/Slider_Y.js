@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPhoneVolume, faTv, faChartBar, faChartPie, faHand, faEnvelopeOpen, faBook, faPeopleRoof, faHandsHoldingChild, faBox, faGlassWater, faUsers, faBars } from "@fortawesome/free-solid-svg-icons";
+import { faKey, faArrowRightToBracket, faChartBar, faChartPie, faHand, faEnvelopeOpen, faBook, faPeopleRoof, faHandsHoldingChild, faBox, faGlassWater, faUsers, faBars } from "@fortawesome/free-solid-svg-icons";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectRole, selectPermission } from "../../Redux/UserRedux_Y";
@@ -167,12 +167,13 @@ function Slider({ sidebarCollapsed, onToggleSidebar }) {
               </li>
             </ul>
           </div>
-          <div style={{display : "flex" , justifyContent : "space-between", alignItems : "center"}}>
-            <div style={{marginRight : "10px"}}>
-              đổi mật khẩu
+          <div className="header_slider" style={{display : "flex" , justifyContent : "space-between", alignItems : "center"}}>
+            <div style={{marginRight : "20px"}}>
+            <FontAwesomeIcon icon={faKey} />
             </div>
             <div>
-              đăng xuất
+            <FontAwesomeIcon icon={faArrowRightToBracket} />
+
             </div>
           </div>
         </div>

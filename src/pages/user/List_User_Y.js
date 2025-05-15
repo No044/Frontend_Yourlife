@@ -38,7 +38,6 @@ function List_User_Y() {
 
   const FetchAPI = async () => {
     const respond = await GetALLUser()
-    console.log(respond)
     if (respond.status == true && Array.isArray(respond.data)) {
       const newData = respond.data.map((item, index) => {
         return (

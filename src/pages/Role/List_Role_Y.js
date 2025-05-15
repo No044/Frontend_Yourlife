@@ -31,7 +31,6 @@ function List_Role_Y() {
 
   const FetchAPI = async () => {
     const respond = await GetAllRole()
-    console.log(respond)
     if (respond.status == true && Array.isArray(respond.data)) {
       const newData = respond.data.map((item, index) => {
         return (

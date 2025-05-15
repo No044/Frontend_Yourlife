@@ -38,7 +38,6 @@ export const changestatusUser = async(option)=> {
 }
 
 
-
 export const Authorizes = async()=> {
     const data = await GetData(`Authen/authorizes`)
     return data
