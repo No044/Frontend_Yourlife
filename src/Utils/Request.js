@@ -1,5 +1,5 @@
 const domain = process.env.REACT_APP_BACKEND_URL;
-console.log("===domain:", domain);
+
 export const GetData = async (path) => {
   try {
     const response = await fetch(domain + path, {
