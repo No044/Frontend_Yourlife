@@ -1,4 +1,13 @@
-.pc-sidebar{
+
+body.dark {
+  background-color: black;
+  color: white;
+}
+
+body.light {
+  background-color: white;
+  color: black;
+}.pc-sidebar{
     overflow-y: scroll;
 }
 .navbar-wrapper{
@@ -14,6 +23,72 @@
 }
 .admin_header_sider li path{
     color: #30C2EC;
+}
+
+.header_slider path{
+  color: #30C2EC;
+}
+
+.header_slider svg{
+  font-size: 19px !important;
+}
+
+.overview .icon{
+  background-color: #e6f7ff;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.overview svg{
+  font-size: 23px !important;
+
+}
+
+.overview path{
+  color: #30C2EC;
+}
+
+.overview .content{
+  color: #797A7D !important;
+  font-weight: 700;
+  font-size: 14px !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+
+.overview .service path{
+  color : #52C41A
+}
+
+.overview .service .icon{
+  background-color: #d9f7be
+}
+
+.overview .pack path{
+  color : #EB2F96
+
+}
+
+
+.overview .pack .icon {
+  background-color: rgba(241, 30, 146, 0.2); /* đậm hơn */
+}
+
+
+
+.overview .date path{
+  color: #F3521B;
+}
+
+.overview .date .icon {
+  background-color: rgba(243, 82, 27, 0.15);
 }
 
 .admin_header_sider li .pc-mtext{
@@ -138,4 +213,57 @@ button:hover{
   background: white !important;
   color: #30C2EC !important;
   border: 1px solid white !important;
+}
+
+.admin_header_sider .active .pc-mtext{
+  color: #30C2EC;
+  width: 100%;
+}
+
+.ant-pagination .ant-pagination-item{
+  background: #30C2EC;
+  color : white !important;
+  font-weight: 800;
+  border: 1px solid white;
+}
+.ant-pagination .ant-pagination-item:hover{
+  background: white !important;
+  color : #30C2EC !important;
+  border: 1px solid #30C2EC;
+}
+
+.ant-pagination .ant-pagination-item-active{
+  background: white !important;
+  color : #30C2EC !important;
+  border: 1px solid #30C2EC;
+}
+
+
+.ant-pagination .ant-pagination-prev svg{
+  color: #30C2EC !important;
+
+}
+
+.ant-pagination .ant-pagination-next svg{
+  color: #30C2EC !important;
+
+}
+
+
+.pc-sidebar.collapsed {
+  width: 0;
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+
+.pc-sidebar {
+  transition: width 0.3s ease;
+}
+
+.pc-header.collapsed{
+  left: 0 !important;
+}
+
+.pc-container.collapsed{
+  margin-left: 0;
 }

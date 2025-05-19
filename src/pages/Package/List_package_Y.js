@@ -4,14 +4,14 @@ import Header_Y from "../../Components/Layout/Header_Y";
 import authorize from "../../Components/helper/authorize_Y";
 import handle_error from "../../Components/Piece/handle_error";
 import { useState, useEffect } from "react";
-import { Table, Card, Input, Button, Form, Col, Row, Checkbox,Empty } from 'antd';
+import { Table, Card, Input, Button, Form, Col, Tooltip,Row, Checkbox,Empty } from 'antd';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { GetAllPackage, changestatusPackage } from "../../service/Package_Y.service";
+import { DeletedPK, DeletedSV, GetAllPackage, changestatusPackage } from "../../service/Package_Y.service";
 import { faEye, faCalendarCheck, faPenRuler, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { selectRole, selectPermission } from "../../Redux/UserRedux_Y";
-import { AlertSuccess } from "../../Components/Piece/Alert";
+import { AlertAgree, AlertSuccess } from "../../Components/Piece/Alert";
 
 
 function List_package() {
@@ -45,15 +45,29 @@ function List_package() {
               {item.status === 1 ? "Hoạt Động" : "Đã Khóa"}
             </Button>,
             action: <div style={{ display: "flex" , gap: "10px"}}>
-              {(permission?.includes("edit_package") || role == "admin") && <Link to={`/list_package/edit/${item._id}`}> <Button ><FontAwesomeIcon icon={faPenRuler} /></Button></Link>}
+              {(permission?.includes("edit_package") || role == "admin") && 
+                <Tooltip title="Chỉnh Sửa Dịch Vụ" color="#FA541C">
+
+                <Link to={`/list_package/edit/${item._id}`}> <Button ><FontAwesomeIcon icon={faPenRuler} /></Button></Link>
+                </Tooltip>
+              }
               {(permission?.includes("detail_pkctm") || role === "admin") && (
+                <Tooltip title="Xem Chi Tiết Người Sử Dụng Dịch Vụ" color="#FA541C">
+
                 <Link to={`detail_pkctm/${item._id}/pkctm`}>
                   <Button>
                     <FontAwesomeIcon icon={faEye} />
                   </Button>
                 </Link>
+              </Tooltip>
               )}
-              {(permission?.includes("deleted_package") || role == "admin") && <Button onClick={() => deleted_CTM(item._id)} ><FontAwesomeIcon icon={faTrashCan} /></Button>}
+              {(permission?.includes("deleted_package") || role == "admin") &&
+                <Tooltip title="Xóa Dịch Vụ" color="#FA541C">
+
+                 <Button onClick={() => deleted_CTM(item._id)} ><FontAwesomeIcon icon={faTrashCan} /></Button>
+                 </Tooltip>
+
+                }
             </div>
           }
           
@@ -78,21 +92,15 @@ function List_package() {
   }
 
   const deleted_CTM = async (e) => {
-    const result = await Swal.fire({
-      title: "Bạn có chắc chắn muốn xóa?",
-      text: "Hành động này không thể hoàn tác!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#30C2EC",
-      cancelButtonColor: "#30C2EC",
-      confirmButtonText: "Xóa",
-      cancelButtonText: "Hủy"
-    });
-
-    if (result.isConfirmed) {
-      console.log("Đã chạy vào đây");
-    }
-
+    const check = await AlertAgree("Bạn có muốn Xóa Không", "Đồng Ý", "Xác Nhận hành Động")
+        if (check.isConfirmed) {
+          const respond = await DeletedPK({id : e})
+          if (respond.status == true) {
+            AlertSuccess("Xóa Thành Công")
+            FetchAPI()
+          }
+          handle_error(respond, navigate)
+        }
   }
   useEffect(() => {
     FetchAPI()
@@ -110,7 +118,7 @@ function List_package() {
           }}>
             <div style={{ textAlign: "right" }}>
               {(permission?.includes("create_package") || role == "admin") &&
-                <Link style={{ textDecoration: 'none' }} to="/list_package/Add"> <Button type="primary">Add</Button></Link>
+                <Link style={{ textDecoration: 'none' }} to="/list_package/Add"> <Button type="primary">Thêm</Button></Link>
               }
             </div>
             {

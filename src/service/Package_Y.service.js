@@ -1,9 +1,11 @@
 import {GetData , PostData , PatchData} from "../Utils/Request"
 
-export const GetAllPackage = async () => {
+export const GetAllPackage = async (type = true) => {
    const params = new URLSearchParams(window.location.search)
-   params.key = params.get("key")
-   params.status = params.get("status")
+   if(type == true){
+      params.key = params.get("key")
+     params.status = params.get("status")
+  }
    const key = params?.key ?? ""; 
    const status = params?.status ?? 1
 
@@ -29,5 +31,9 @@ export const changestatusPackage = async(option) => {
 
 export const Getdetail = async(id) => {
    const data = await GetData(`package/Getdetail/${id}`)
+   return data
+}
+export const DeletedPK = async (option) => {
+   const data = await PatchData(`package/deleted`, option)
    return data
 }

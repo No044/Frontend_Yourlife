@@ -1,6 +1,7 @@
 import { Alerterror } from "./Alert"
 import { deleteCookie } from "../helper/cookie"
 function handle_error(respond,navigate){
+    
      if(respond.status == false && respond.error == 100){
          navigate("/auth/login")
          return
@@ -9,7 +10,7 @@ function handle_error(respond,navigate){
         return
      }
      else if(respond.status == false && respond.error == 300){
-        Alerterror("Dữ Liệu Không Hợp Lệ")
+        Alerterror("Dữ Liệu Không Hợp Lệ Để Thực Hiện Thao Tác")
         return
      }else if(respond.status == false && respond.error == 400){
       Alerterror("Server Khóa Tạm Thời")
@@ -18,8 +19,8 @@ function handle_error(respond,navigate){
    }else if(respond.status == false && respond.error == 600){
       Alerterror("Server Không Hoạt Dộng")
       return
-   }else if(respond.status == false && respond.error == 700){
-      Alerterror("Dữ liệu cập nhật không hợp lệ")
+   }else if(respond.status == false && respond.error == 800){
+      Alerterror("Tài Khoản Của Bạn Đã Bị Khóa")
       return
    }
 }

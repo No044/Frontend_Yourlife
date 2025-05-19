@@ -2,9 +2,10 @@ import Search_Component from "../../Components/Piece/Search";
 import Header_Y from "../../Components/Layout/Header_Y";
 import handle_error from "../../Components/Piece/handle_error"
 import authorize from "../../Components/helper/authorize_Y";
+
 import { useState, useEffect, useRef } from "react";
-import { Table, Card, Modal, Button, Select,Tooltip, Form, DatePicker, Col, Row, Checkbox, Empty } from 'antd';
-import { GetALLCTM, ChangeCTM } from "../../service/CTM_Y.service";
+import { Table, Card, Modal, Button, Select, Tooltip, Form, DatePicker, Col, Row, Checkbox, Empty, Descriptions, Avatar, Divider, Tag } from 'antd';
+import { GetALLCTM, DeletedCTM, ChangeCTM, Postfinger } from "../../service/CTM_Y.service";
 import { GetAllPackage } from "../../service/Package_Y.service";
 import { GetAllService } from "../../service/Service_Y.service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -15,20 +16,35 @@ import { useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectRole, selectPermission } from "../../Redux/UserRedux_Y";
 import { PostCTM_SV } from "../../service/CTM_SV_Y.service";
+import PaginationCustom from "../../Components/Piece/pagination";
 function List_customer() {
   const navigate = useNavigate()
   const permission = useSelector(selectPermission)
   const role = useSelector(selectRole)
+
   const [DataCTM, SetDataCTM] = useState([])
   const [Datapackage, setDatapackage] = useState({})
+  const [Dataservice, setDataservice] = useState({})
+  const [datasdetail, setDatasdetail] = useState({
+    FullName: "Nguyễn Văn A", // Example name
+    Status: 1, // 1 for active, 0 for inactive
+    Email: "nguyenvana@example.com", // Customer's email
+    Phone_number: "0123456789", // Customer's phone number
+    startday: "2025-01-01", // Start date of the membership
+    totalDay: 30, // Total number of days registered
+    id_fingerprint: "1234567890", // Fingerprint ID (if registered)
+
+  })
+
   const [dates, setDates] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [datasubmit, setdatasubmit] = useState({ id_user: null, id_pack: null })
-
-  const [Dataservice, setDataservice] = useState({})
+  const [isModalcustomer, setisisModalcustomer] = useState(false);
   const [isModalService, setisModalService] = useState(false);
+
+  const [datasubmit, setdatasubmit] = useState({ id_user: null, id_pack: null })
   const [datasubmitservice, setdatasubmitservice] = useState({ id_user: null, id_ser: null, status: 2 })
 
+  const [pagination, setpagination] = useState(1)
   let arraycheck = useRef([])
   authorize(permission, "view_customer", navigate, role)
   const categories =
@@ -60,7 +76,7 @@ function List_customer() {
   ];
 
   const FetchAPI = async () => {
-    const respondpackage = await GetAllPackage()
+    const respondpackage = await GetAllPackage(false)
     if (respondpackage.status == true && respondpackage.data.length > 0) {
       const newdata = respondpackage.data.map((item) => {
         return ({
@@ -85,7 +101,7 @@ function List_customer() {
     }
     handle_error(respondpackage, navigate)
 
-    const respondservice = await GetAllService()
+    const respondservice = await GetAllService(false)
     if (respondservice.status == true && respondservice.data.length > 0) {
       const newdata = respondservice.data.map((item) => {
         return ({
@@ -109,6 +125,7 @@ function List_customer() {
     }
     handle_error(respondservice, navigate)
     const respond = await GetALLCTM();
+    console.log(respond)
     if (respond.data != null) {
       const newData = respond.data.map((item, index) => {
         return (
@@ -121,54 +138,54 @@ function List_customer() {
             service: (
               <div className="admin_table_list_ctm">
                 {(permission?.includes("create_svctm") || role === "admin") && (
-                   <Tooltip title="Thêm Dịch Vụ Cho Khách Hàng" color="#FA541C">
-                  <Button
-                    onClick={() =>
-                      showModalService({
-                        id: item._id,
-                        idpack: respondservice?.data?.length > 0 ? respondservice.data[0]._id : null,
-                      })
-                    }
-                  >
-                    <FontAwesomeIcon icon={faPlus} />
-                  </Button>
+                  <Tooltip title="Thêm Dịch Vụ Cho Khách Hàng" color="#FA541C">
+                    <Button
+                      onClick={() =>
+                        showModalService({
+                          id: item._id,
+                          idpack: respondservice?.data?.length > 0 ? respondservice.data[0]._id : null,
+                        })
+                      }
+                    >
+                      <FontAwesomeIcon icon={faPlus} />
+                    </Button>
                   </Tooltip>
                 )}
 
                 {(permission?.includes("detail_svctm") || role === "admin") && (
-                    <Tooltip title="Xem dịch Vụ khách Hàng Sử Dụng" color="#FA541C">
-                  <Link to={`/list_service/detailsvctm/${item._id}/ctmsv`}>
-                    <Button>
-                      <FontAwesomeIcon icon={faEye} />
-                    </Button>
-                  </Link></Tooltip>
+                  <Tooltip title="Xem dịch Vụ khách Hàng Sử Dụng" color="#FA541C">
+                    <Link to={`/list_service/detailsvctm/${item._id}/ctmsv`}>
+                      <Button>
+                        <FontAwesomeIcon icon={faEye} />
+                      </Button>
+                    </Link></Tooltip>
                 )}
               </div>
             ),
 
             package: (
               <div>
-                 {(permission?.includes("create_pkctm") || role === "admin") && (
-                     <Tooltip title="Thêm Gói Tập Cho Khách Hàng" color="#FA541C">
-                <Button
-                  onClick={() =>
-                    showModal({
-                      id: item._id,
-                      idpack: respondpackage?.data?.length > 0 ? respondpackage.data[0]._id : null,
-                    })
-                  }
-                >
-                  <FontAwesomeIcon icon={faPlus} />
-                </Button></Tooltip>)}
+                {(permission?.includes("create_pkctm") || role === "admin") && (
+                  <Tooltip title="Thêm Gói Tập Cho Khách Hàng" color="#FA541C">
+                    <Button
+                      onClick={() =>
+                        showModal({
+                          id: item._id,
+                          idpack: respondpackage?.data?.length > 0 ? respondpackage.data[0]._id : null,
+                        })
+                      }
+                    >
+                      <FontAwesomeIcon icon={faPlus} />
+                    </Button></Tooltip>)}
                 {(permission?.includes("detail_pkctm") || role === "admin") && (
-                     <Tooltip title="Xem Gói Tập Của Khách Hàng" color="#FA541C">
+                  <Tooltip title="Xem Gói Tập Của Khách Hàng" color="#FA541C">
 
-                <Link to={`/list_package/detail_pkctm/${item._id}/ctmpk`}>
-                  <Button>
-                    <FontAwesomeIcon icon={faEye} />
-                  </Button>
-                </Link> </Tooltip>)}
-                
+                    <Link to={`/list_package/detail_pkctm/${item._id}/ctmpk`}>
+                      <Button>
+                        <FontAwesomeIcon icon={faEye} />
+                      </Button>
+                    </Link> </Tooltip>)}
+
               </div>
             ),
 
@@ -190,42 +207,44 @@ function List_customer() {
 
             action: (
               <div style={{ display: "flex", gap: "8px" }}>
-              {(permission?.includes("detail_customer") || role == "admin") && (
-                <Tooltip title="Xem Chi Tiết Khách Hàng" color="#FA541C">
-                  <Link to={`/list_customer/detail/${item._id}`}>
-                    <Button>
-                      <FontAwesomeIcon icon={faEye} />
+                {(permission?.includes("detail_customer") || role == "admin") && (
+                  <Tooltip title="Xem Chi Tiết Khách Hàng" color="#FA541C">
+                    <Link to={`/list_customer/detail/${item._id}`}>
+                      <Button>
+                        <FontAwesomeIcon icon={faEye} />
+                      </Button>
+                    </Link>
+                  </Tooltip>
+                )}
+
+                {(permission?.includes("edit_customer") || role == "admin") && (
+                  <Tooltip title="Chỉnh Sửa Thông Tin" color="#FA541C">
+                    <Link to={`/list_customer/edit/${item._id}`}>
+                      <Button>
+                        <FontAwesomeIcon icon={faPenRuler} />
+                      </Button>
+                    </Link>
+                  </Tooltip>
+                )}
+
+                {(permission?.includes("deleted_customer") || role == "admin") && (
+                  <Tooltip title="Xóa Khách Hàng" color="#FA541C">
+                    <Button onClick={() => deleted_CTM(item._id)}>
+                      <FontAwesomeIcon icon={faTrashCan} />
                     </Button>
-                  </Link>
-                </Tooltip>
-              )}
-            
-              {(permission?.includes("edit_customer") || role == "admin") && (
-                <Tooltip title="Chỉnh Sửa Thông Tin" color="#FA541C">
-                  <Link to={`/list_customer/edit/${item._id}`}>
-                    <Button>
-                      <FontAwesomeIcon icon={faPenRuler} />
-                    </Button>
-                  </Link>
-                </Tooltip>
-              )}
-            
-              {(permission?.includes("deleted_customer") || role == "admin") && (
-                <Tooltip title="Xóa Khách Hàng" color="#FA541C">
-                  <Button onClick={() => deleted_CTM(item._id)}>
-                    <FontAwesomeIcon icon={faTrashCan} />
-                  </Button>
-                </Tooltip>
-              )}
-            </div>
+                  </Tooltip>
+                )}
+              </div>
             ),
           }
         )
       })
       SetDataCTM(newData)
+      setpagination(respond.total)
     }
     handle_error(respond, navigate)
   }
+
   const handle_status_change = async (e) => {
     const check = await AlertAgree("Bạn có muốn thay đổi", "Đồng Ý", "Xác Nhận Hành Động")
     if (check.isConfirmed) {
@@ -238,7 +257,6 @@ function List_customer() {
       }
       handle_error(respond, navigate)
     }
-
   }
   const addcheckbox = (e) => {
     if (arraycheck.current.includes(e)) {
@@ -269,7 +287,7 @@ function List_customer() {
 
 
   const handleOk = async (type) => {
-    if (type == "package") {
+    if (type == "package" ) {
       const check = await AlertAgree("Bạn Xác Nhận Gói Tập Này", "Đồng Ý", "Xác Nhận Gói Tập")
       if (check.isConfirmed) {
         const respond = await PostCTM_PK(datasubmit)
@@ -315,6 +333,7 @@ function List_customer() {
       status: 2
 
     });
+    setisisModalcustomer(false)
     setisModalService(false);
   };
 
@@ -326,6 +345,7 @@ function List_customer() {
   }
 
   const handle_id_service = (value) => {
+    console.log(value)
     setdatasubmitservice(prevState => ({
       ...prevState,
       id_ser: value
@@ -340,7 +360,15 @@ function List_customer() {
 
   const deleted_CTM = async (e) => {
     const check = await AlertAgree("Bạn có muốn Xóa Không", "Đồng Ý", "Xác Nhận hành Động")
-
+    if (check.isConfirmed) {
+      const respond = await DeletedCTM({ id: e })
+      console.log(respond)
+      if (respond.status == true) {
+        AlertSuccess("Xóa Thành Công")
+        FetchAPI()
+      }
+      handle_error(respond, navigate)
+    }
   }
 
   const onChange_checked_service = async () => {
@@ -349,6 +377,20 @@ function List_customer() {
       status: datasubmitservice.status == 1 ? 2 : 1
     }));
   }
+  const handle_finger = async () => {
+    const respond = await Postfinger()
+    if (respond.data != null && respond.status == true && respond.type == 'Customer') {
+      setDatasdetail(respond.data)
+      setisisModalcustomer(true)
+    }
+    else {
+      const check = await AlertAgree("Khách Hàng Chưa Tổn Tại", "Đồng Ý", "Bạn có muốn thêm")
+      if (check.isConfirmed) {
+        navigate(`/list_customer/add/${respond.data}`)
+      }
+    }
+    handle_error(respond, navigate)
+  }
   useEffect(() => {
     FetchAPI()
   }, [])
@@ -356,6 +398,71 @@ function List_customer() {
     <>
       <Header_Y content={"Danh Sách Khách Hàng"} />
       <Row style={{ marginTop: "30px" }}>
+        <Modal
+          title="📋 Thông Tin Khách Hàng"
+          open={isModalcustomer}
+          onCancel={handleCancel}
+          width="50%"
+          bodyStyle={{
+            height: "70vh",
+            overflowY: "auto",
+            padding: "24px",
+            backgroundColor: "#f9f9f9",
+          }}
+        >
+          <div style={{ textAlign: "center", marginBottom: 24 }}>
+            <h2 style={{ marginTop: 12 }}>{datasdetail?.FullName || "Tên Khách Hàng"}</h2>
+            {
+              datasdetail.Status == 1 ? (
+                <span style={{ color: "#30C2EC", fontSize: "16px", fontWeight: 600 }}>Hoạt động</span>
+              ) : datasdetail.Status == 2 ? (
+                <span style={{ color: "#30C2EC", fontSize: "16px", fontWeight: 600 }}>Không hoạt động</span>
+              ) : (
+                <span style={{ color: "#30C2EC", fontSize: "16px", fontWeight: 600 }}>Bảo Lưu</span>
+              )
+            }
+          </div>
+
+          <Divider />
+
+          <Descriptions
+            title="Thông Tin Tổng Quang"
+            bordered
+            column={1}
+            size="middle"
+            labelStyle={{ fontWeight: "bold", width: "30%" }}
+          >
+            <Descriptions.Item label={"Email "}>📧  {datasdetail?.Email || "Không có"}</Descriptions.Item>
+            <Descriptions.Item label={"Số Điện Thoại"}>📞 {datasdetail?.Phone_number || "Không có"}</Descriptions.Item>
+            <Descriptions.Item label={"Thông Tin Chi Tiết"}>  👁️ <Link to={`/list_customer/detail/${datasdetail._id}`}>Xem</Link></Descriptions.Item>
+            <Descriptions.Item label={"Số Ngày Còn Lại"}>  <span
+              className={`css_list_ctm ${datasdetail.Status == 3 ? "reserve" : datasdetail.totalDay > 5 ? "good" : "bad"
+                }`}
+            >
+              {Math.ceil(datasdetail.totalDay)} ngày Còn Lại
+            </span></Descriptions.Item>
+            <Descriptions.Item label={"Đăng Kí Gói Tập"}>    <Select
+              style={{ width: '100%' }}
+              options={Datapackage}
+              onChange={handle_id_package}
+            /></Descriptions.Item>
+
+            <Descriptions.Item label={"Sử Dụng Dịch Vụ"}>
+              <Select
+                style={{ width: '100%'}}
+                options={Dataservice}
+                onChange={handle_id_service}
+              />
+            </Descriptions.Item>
+
+          </Descriptions>
+
+          <Divider />
+
+        </Modal>
+
+
+
         <Modal title="Thêm Gói Tập Cho Khách Hàng"
           centered open={isModalOpen} onOk={() => handleOk("package")}
           onCancel={handleCancel}
@@ -367,6 +474,8 @@ function List_customer() {
             onChange={handle_id_package}
           />
         </Modal>
+
+
         <Modal title="Thêm Dịch Vụ Cho Khách Hàng"
           centered open={isModalService} onOk={() => handleOk("service")}
           onCancel={handleCancel}
@@ -432,15 +541,23 @@ function List_customer() {
                   <Button type="primary" htmlType="submit" >Áp Dụng</Button>
 
                 </div>}
-                {(permission?.includes("create_customer") || role == "admin") &&
-                  <Link style={{ textDecoration: 'none' }} to="/list_customer/Add"> <Button type="primary" >Add</Button></Link>
-                }
+
+                <div>
+                  <Button onClick={handle_finger} type="primary" >Kiểm Tra</Button>
+
+                  {/* {(permission?.includes("create_customer") || role == "admin") &&
+                    <Link style={{ textDecoration: 'none' }} to="/list_customer/Add"> <Button type="primary" >Thêm</Button></Link>
+                  } */}
+                </div>
 
               </div>
               {
                 DataCTM.length > 0 ?
-                  <Table pagination={{ pageSize: 4 }} columns={columns} dataSource={DataCTM} /> : <Empty description={"Không Có Khách Hàng"} />
+                  <Table pagination={false} columns={columns} dataSource={DataCTM} /> : <Empty description={"Không Có Khách Hàng"} />
+
               }
+              <PaginationCustom total={pagination} FetchAPI={FetchAPI} />
+
             </Form>
 
           </Card>

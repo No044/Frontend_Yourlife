@@ -1,5 +1,4 @@
 import { Outlet, Navigate, useNavigate } from "react-router-dom"
-import { getCookie ,deleteCookie } from "../helper/cookie"
 import { useSelector, useDispatch } from 'react-redux';
 import { login } from '../../Redux/UserRedux_Y';
 import { Authorizes } from "../../service/Login_Y.service";
@@ -27,8 +26,7 @@ function Authentication() {
     }, [])
   
     if (loading) {
-        return(
-          
+        return(         
     <div   style={{
         display: 'flex',
         justifyContent: 'center', 
