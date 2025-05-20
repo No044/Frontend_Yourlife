@@ -6,7 +6,7 @@ on:
 
 env:
   IMAGE_NAME: minhnghia12305/frontend-yourlife
-  REACT_APP_BACKEND_URL: http://ec2-65-1-177-139.ap-south-1.compute.amazonaws.com:3001/api/v1/
+  REACT_APP_BACKEND_URL: https://yourlifefitness.id.vn/api/v1/
 
 jobs:
   build-and-push:
