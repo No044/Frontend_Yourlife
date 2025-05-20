@@ -13,7 +13,7 @@ export const GetData = async (path) => {
 
     return await response.json();
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return {
       status: false,
       type: "Auth",
