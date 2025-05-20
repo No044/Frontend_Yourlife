@@ -2,6 +2,7 @@ import Search_Component from "../../Components/Piece/Search";
 import Header_Y from "../../Components/Layout/Header_Y";
 import handle_error from "../../Components/Piece/handle_error"
 import authorize from "../../Components/helper/authorize_Y";
+import Seturl from "../../Components/helper/SetURL";
 
 import { useState, useEffect, useRef } from "react";
 import { Table, Card, Modal, Button, Select, Tooltip, Form, DatePicker, Col, Row, Checkbox, Empty, Descriptions, Avatar, Divider, Tag } from 'antd';
@@ -9,7 +10,7 @@ import { GetALLCTM, DeletedCTM, ChangeCTM, Postfinger } from "../../service/CTM_
 import { GetAllPackage } from "../../service/Package_Y.service";
 import { GetAllService } from "../../service/Service_Y.service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faPlus, faPenRuler, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faPlus, faMagnifyingGlass,faPenRuler, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { AlertAgree, AlertSuccess } from "../../Components/Piece/Alert";
 import { PostCTM_PK } from "../../service/CTM_PK_Y.service";
 import { useNavigate, Link } from "react-router-dom";
@@ -26,13 +27,13 @@ function List_customer() {
   const [Datapackage, setDatapackage] = useState({})
   const [Dataservice, setDataservice] = useState({})
   const [datasdetail, setDatasdetail] = useState({
-    FullName: "Nguyễn Văn A", // Example name
-    Status: 1, // 1 for active, 0 for inactive
-    Email: "nguyenvana@example.com", // Customer's email
-    Phone_number: "0123456789", // Customer's phone number
-    startday: "2025-01-01", // Start date of the membership
-    totalDay: 30, // Total number of days registered
-    id_fingerprint: "1234567890", // Fingerprint ID (if registered)
+    FullName: "Nguyễn Văn A", 
+    Status: 1, 
+    Email: "nguyenvana@example.com",
+    Phone_number: "0123456789",
+    startday: "2025-01-01", 
+    totalDay: 30, 
+    id_fingerprint: "1234567890",
 
   })
 
@@ -41,8 +42,8 @@ function List_customer() {
   const [isModalcustomer, setisisModalcustomer] = useState(false);
   const [isModalService, setisModalService] = useState(false);
 
-  const [datasubmit, setdatasubmit] = useState({ id_user: null, id_pack: null })
-  const [datasubmitservice, setdatasubmitservice] = useState({ id_user: null, id_ser: null, status: 2 })
+  const [datasubmit, setdatasubmit] = useState({ id_user: null, id_pack: null , name : null })
+  const [datasubmitservice, setdatasubmitservice] = useState({ id_user: null, id_ser: null, status: 2 , nane : null})
 
   const [pagination, setpagination] = useState(1)
   let arraycheck = useRef([])
@@ -125,7 +126,6 @@ function List_customer() {
     }
     handle_error(respondservice, navigate)
     const respond = await GetALLCTM();
-    console.log(respond)
     if (respond.data != null) {
       const newData = respond.data.map((item, index) => {
         return (
@@ -144,6 +144,7 @@ function List_customer() {
                         showModalService({
                           id: item._id,
                           idpack: respondservice?.data?.length > 0 ? respondservice.data[0]._id : null,
+                          name : item.FullName
                         })
                       }
                     >
@@ -172,6 +173,7 @@ function List_customer() {
                         showModal({
                           id: item._id,
                           idpack: respondpackage?.data?.length > 0 ? respondpackage.data[0]._id : null,
+                          name : item.FullName
                         })
                       }
                     >
@@ -271,7 +273,8 @@ function List_customer() {
   const showModal = (e) => {
     setdatasubmit({
       id_pack: e.idpack,
-      id_user: e.id
+      id_user: e.id,
+      name : e.name
     });
     setIsModalOpen(true);
   };
@@ -280,7 +283,8 @@ function List_customer() {
     setdatasubmitservice({
       id_ser: e.idpack,
       id_user: e.id,
-      status: 2
+      name : e.name,
+      status: 2,
     });
     setisModalService(true);
   };
@@ -294,7 +298,8 @@ function List_customer() {
         if (respond.status == true) {
           setdatasubmit({
             id_user: null,
-            id_pack: null
+            id_pack: null,
+            name : null
           });
           AlertSuccess()
           FetchAPI()
@@ -310,7 +315,8 @@ function List_customer() {
           setdatasubmitservice({
             id_user: null,
             id_ser: null,
-            status: 2
+            status: 2,
+            name : null
           });
           AlertSuccess()
           FetchAPI()
@@ -324,12 +330,14 @@ function List_customer() {
   const handleCancel = () => {
     setdatasubmit({
       id_user: null,
-      id_pack: null
+      id_pack: null,
+      name : null
     });
     setIsModalOpen(false);
     setdatasubmitservice({
       id_user: null,
       id_ser: null,
+      name : null,
       status: 2
 
     });
@@ -345,7 +353,6 @@ function List_customer() {
   }
 
   const handle_id_service = (value) => {
-    console.log(value)
     setdatasubmitservice(prevState => ({
       ...prevState,
       id_ser: value
@@ -362,7 +369,6 @@ function List_customer() {
     const check = await AlertAgree("Bạn có muốn Xóa Không", "Đồng Ý", "Xác Nhận hành Động")
     if (check.isConfirmed) {
       const respond = await DeletedCTM({ id: e })
-      console.log(respond)
       if (respond.status == true) {
         AlertSuccess("Xóa Thành Công")
         FetchAPI()
@@ -377,19 +383,28 @@ function List_customer() {
       status: datasubmitservice.status == 1 ? 2 : 1
     }));
   }
+
   const handle_finger = async () => {
     const respond = await Postfinger()
-    if (respond.data != null && respond.status == true && respond.type == 'Customer') {
+    if(respond.status == true && respond.type == "Khách Hàng Đã Tồn Tại") {
       setDatasdetail(respond.data)
       setisisModalcustomer(true)
     }
-    else {
-      const check = await AlertAgree("Khách Hàng Chưa Tổn Tại", "Đồng Ý", "Bạn có muốn thêm")
+    else if(respond.status == true && respond.type == "Khách Hàng Chưa Tồn Tại"){
+      const check = await AlertAgree(respond.type, "Đồng Ý", "Bạn có muốn thêm")
       if (check.isConfirmed) {
-        navigate(`/list_customer/add/${respond.data}`)
+        navigate(`/list_customer/add/${respond.data.iv}*${respond.data.encryptedData}`)
       }
+      
+    }else{
+      handle_error(respond, navigate,respond.type)
     }
-    handle_error(respond, navigate)
+  }
+  
+  const handle_search_detail_CTM = (e) => {
+    setisisModalcustomer(false)
+    Seturl({ title: 'key', value: e })
+    FetchAPI()
   }
   useEffect(() => {
     FetchAPI()
@@ -402,16 +417,11 @@ function List_customer() {
           title="📋 Thông Tin Khách Hàng"
           open={isModalcustomer}
           onCancel={handleCancel}
-          width="50%"
-          bodyStyle={{
-            height: "70vh",
-            overflowY: "auto",
-            padding: "24px",
-            backgroundColor: "#f9f9f9",
-          }}
+          width="40%"
         >
+
           <div style={{ textAlign: "center", marginBottom: 24 }}>
-            <h2 style={{ marginTop: 12 }}>{datasdetail?.FullName || "Tên Khách Hàng"}</h2>
+            <h2 style={{ marginTop: 12 }}>{datasdetail?.FullName} <Button onClick={() => handle_search_detail_CTM(datasdetail.FullName)}><FontAwesomeIcon  icon={faMagnifyingGlass} /></Button></h2>
             {
               datasdetail.Status == 1 ? (
                 <span style={{ color: "#30C2EC", fontSize: "16px", fontWeight: 600 }}>Hoạt động</span>
@@ -441,20 +451,6 @@ function List_customer() {
             >
               {Math.ceil(datasdetail.totalDay)} ngày Còn Lại
             </span></Descriptions.Item>
-            <Descriptions.Item label={"Đăng Kí Gói Tập"}>    <Select
-              style={{ width: '100%' }}
-              options={Datapackage}
-              onChange={handle_id_package}
-            /></Descriptions.Item>
-
-            <Descriptions.Item label={"Sử Dụng Dịch Vụ"}>
-              <Select
-                style={{ width: '100%'}}
-                options={Dataservice}
-                onChange={handle_id_service}
-              />
-            </Descriptions.Item>
-
           </Descriptions>
 
           <Divider />
@@ -463,7 +459,7 @@ function List_customer() {
 
 
 
-        <Modal title="Thêm Gói Tập Cho Khách Hàng"
+        <Modal title={<>Thêm Gói Tập Cho Khách Hàng <span style={{color : "#F5521B"}}>{datasubmit.name}</span></>}
           centered open={isModalOpen} onOk={() => handleOk("package")}
           onCancel={handleCancel}
           width={700}
@@ -476,7 +472,7 @@ function List_customer() {
         </Modal>
 
 
-        <Modal title="Thêm Dịch Vụ Cho Khách Hàng"
+        <Modal title={ <>Thêm Dịch Vụ Cho Khách Hàng <span style={{color : "#F5521B"}}>{datasubmitservice.name}</span> </>}
           centered open={isModalService} onOk={() => handleOk("service")}
           onCancel={handleCancel}
           width={700}
@@ -545,9 +541,9 @@ function List_customer() {
                 <div>
                   <Button onClick={handle_finger} type="primary" >Kiểm Tra</Button>
 
-                  {/* {(permission?.includes("create_customer") || role == "admin") &&
-                    <Link style={{ textDecoration: 'none' }} to="/list_customer/Add"> <Button type="primary" >Thêm</Button></Link>
-                  } */}
+                  {(permission?.includes("create_customer") || role == "admin") &&
+                    <Link style={{ textDecoration: 'none' }} to="/list_customer/Add/null"> <Button type="primary" >Thêm</Button></Link>
+                  }
                 </div>
 
               </div>

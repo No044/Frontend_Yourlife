@@ -19,11 +19,6 @@ export const PatchUser = async(option) => {
     return data
 }
 
-export const adlogoutuser = async(option) => {
-    const data = await PatchData(`Authen/adminlogout`,option)
-    return data
-}
-
 
 export const deletedUser = async(option)=> {
     const data = await PatchData(`Authen/deleted`,option)
@@ -31,9 +26,15 @@ export const deletedUser = async(option)=> {
 }
 
 
-
 export const changestatusUser = async(option)=> {
     const data = await PatchData(`Authen/changestatus`,option)
+    return data
+}
+
+
+
+export const adlogoutuser = async(option) => {
+    const data = await PatchData(`Authen/adminlogout`,option)
     return data
 }
 
@@ -53,3 +54,7 @@ export const Logout = async()=> {
     return data
 }
 
+export const changePassword = async(option) => {
+    const data = await PatchData(`Authen/password`,option)
+    return data
+}

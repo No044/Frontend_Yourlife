@@ -1,10 +1,22 @@
 import Header_Y from "../../Components/Layout/Header_Y"
+import authorize from "../../Components/helper/authorize_Y";
+
 import { useState, useEffect } from "react";
 import { Row, Col, Card, Form, DatePicker, Empty, Table, Button, Popover } from "antd"
 import { GetAllHistory } from "../../service/History_Y.service";
+import { selectRole, selectPermission } from "../../Redux/UserRedux_Y";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 function List_HS_Y() {
     const [datahistory, setdatahistory] = useState(null)
     const [revenue, setrevenue] = useState(0)
+    const permission = useSelector(selectPermission)
+    const role = useSelector(selectRole)
+  
+    const navigate = useNavigate()
+    
+    authorize(permission, "null", navigate, role, 2)
 
     const columns = [
         {
