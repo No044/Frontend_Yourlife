@@ -1,15 +1,21 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faKey, faArrowRightToBracket, faChartBar, faChartPie, faHand, faEnvelopeOpen, faBook, faPeopleRoof, faHandsHoldingChild, faBox, faGlassWater, faUsers, faBars } from "@fortawesome/free-solid-svg-icons";
-import { NavLink, useNavigate } from "react-router-dom";
+import { faKey, faArrowRightToBracket, faChartBar, faChartPie, faHand, faBook, faPeopleRoof, faHandsHoldingChild, faBox, faGlassWater, faUsers, faBars } from "@fortawesome/free-solid-svg-icons";
+import { NavLink, useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Button, Tooltip } from "antd";
 import { selectRole, selectPermission } from "../../Redux/UserRedux_Y";
-
+import { Logout } from "../../service/Login_Y.service";
 function Slider({ sidebarCollapsed, onToggleSidebar }) {
   const role = useSelector(selectRole)
   const permission = useSelector(selectPermission)
   const navigate = useNavigate()
 
-
+  const handle_logout = async () => {
+    const respond = await Logout()
+    if(respond.status == true){
+       navigate("auth/login")
+    }
+  }
   if (role == null && permission == null) {
     navigate("auth/login")
     return
@@ -167,13 +173,21 @@ function Slider({ sidebarCollapsed, onToggleSidebar }) {
               </li>
             </ul>
           </div>
-          <div className="header_slider" style={{display : "flex" , justifyContent : "space-between", alignItems : "center"}}>
-            <div style={{marginRight : "20px"}}>
-            <FontAwesomeIcon icon={faKey} />
-            </div>
-            <div>
-            <FontAwesomeIcon icon={faArrowRightToBracket} />
 
+          <div className="header_slider" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ marginRight: "20px" }}>
+              <Tooltip title="Đổi Mật Khẩu" color="#FA541C">
+                <Link to='user/password'> <FontAwesomeIcon icon={faKey} /></Link>
+              </Tooltip>
+
+            </div>
+
+            <div>
+             <Tooltip title="Đăng Xuất" color="#FA541C">
+                  <FontAwesomeIcon  onClick={handle_logout} icon={faArrowRightToBracket} />
+              </Tooltip>
+
+             
             </div>
           </div>
         </div>

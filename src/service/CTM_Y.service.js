@@ -22,6 +22,12 @@ export const Postfinger = async (option) => {
     const data = await GetData(`CTM/checkfingerprint`)
     return data
 }
+
+export const updatefinger = async (option) => {
+    const data = await GetData(`CTM/updatefinger`,option)
+    return data
+}
+
 export const PatchCTM = async (option) => {
     const data = await PatchData(`CTM/Patch`, option)
     return data

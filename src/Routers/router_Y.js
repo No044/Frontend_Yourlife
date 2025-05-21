@@ -24,6 +24,7 @@ import Add_user from "../pages/user/Add_user_Y"
 import List_HS_Y from "../pages/History/List_HS_Y"
 import List_Chart from "../pages/chart/List_chart_Y"
 import Page404_Y from "../pages/Overview/404_Y"
+import Password_user_Y from "../pages/user/Password_user_Y"
 export const routers = [
   {
     element: <Authentication />,
@@ -109,6 +110,10 @@ export const routers = [
               {
                 path : "add",
                 element : <Add_user/>
+              },
+              {
+                path : "password",
+                element : <Password_user_Y />
               }
             ]
           },{

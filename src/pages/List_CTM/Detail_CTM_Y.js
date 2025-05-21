@@ -2,13 +2,15 @@ import React from 'react';
 import Header_Y from '../../Components/Layout/Header_Y';
 import authorize from '../../Components/helper/authorize_Y';
 import dayjs from "dayjs";
+
 import { Descriptions, Card, Button } from 'antd';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from "react-router-dom"
-import { GetDetail } from '../../service/CTM_Y.service';
+import { GetDetail, updatefinger } from '../../service/CTM_Y.service';
 import { useSelector } from "react-redux";
-import {  selectRole, selectPermission } from "../../Redux/UserRedux_Y";
+import { selectRole, selectPermission } from "../../Redux/UserRedux_Y";
 import handle_error from '../../Components/Piece/handle_error';
+import { AlertSuccess } from '../../Components/Piece/Alert';
 function Detail_CTM() {
   const [DataCTM, SetDataCTM] = useState(null)
   const permission = useSelector(selectPermission)
@@ -17,11 +19,13 @@ function Detail_CTM() {
 
   const navigate = useNavigate()
   authorize(permission, "detail_customer", navigate, role)
-  const FetchAPI = async () => {
+  
+
+    const FetchAPI = async () => {
     const respond = await GetDetail(id)
     if (respond.status == true) {
       const today = dayjs()
-      const futureDate = today.add(Math.ceil(respond.data.totalDay), "day"); 
+      const futureDate = today.add(Math.ceil(respond.data.totalDay), "day");
       const newobject = [
         {
           key: '1',
@@ -46,12 +50,12 @@ function Detail_CTM() {
         {
           key: '5',
           label: 'Dịch Vụ',
-          children:  <Link to={`/list_service/detailsvctm/${id}/ctmsv`}> Chi tiết</Link>
+          children: <Link to={`/list_service/detailsvctm/${id}/ctmsv`}> Chi tiết</Link>
         },
         {
           key: '6',
           label: 'Gói Tập',
-          children:  <Link to={`/list_package/detail_pkctm/${id}/ctmpk`}> Chi tiết</Link>
+          children: <Link to={`/list_package/detail_pkctm/${id}/ctmpk`}> Chi tiết</Link>
         },
         {
           key: '7',
@@ -78,24 +82,42 @@ function Detail_CTM() {
           children: <div dangerouslySetInnerHTML={{ __html: respond.data.Description }} />
 
         }, {
-          
+
           key: '12',
           label: 'Ngày Hết Hạn Tạm Tính',
           children: futureDate.format("DD/MM/YYYY")
 
         },
+        {
+
+          key: '13',
+          label: 'Vân Tay',
+          children: respond.data.id_fingerprint == null || respond.data.id_fingerprint == "null" ?  <Button onClick={() => handle_update_idfinger(respond.data._id)}>Cập Nhật</Button> : "Đã Có"
+
+        },
       ]
       SetDataCTM(newobject)
     }
-    handle_error(respond,navigate)
+    handle_error(respond, navigate)
   }
+
+  const handle_update_idfinger = async (e) => {
+    const respond = await updatefinger({id : id})
+    if(respond.status == true){
+      AlertSuccess("Thao Tác Thành Công")
+      FetchAPI()
+    }else{
+      handle_error(respond, navigate,respond.type)
+    }
+ }
+ 
   useEffect(() => {
     FetchAPI()
   }, [])
   return (
-    <div>
+    <div >
       <Header_Y content={"Xem Chi Tiết Khách Hàng"} />
-      <Card title="View Detail"
+      <Card 
         bordered={true}
         style={{
           width: '100%',
@@ -103,8 +125,17 @@ function Detail_CTM() {
           marginBottom: "50px",
           marginTop: "30px"
         }}>
-        {DataCTM != null && <Descriptions items={DataCTM} />}
-      </Card></div>
+        {DataCTM != null && <Descriptions labelStyle={{ fontWeight: 600, width: 200 }}
+          bordered
+          column={1}
+          items={DataCTM} />}
+      </Card>
+      <div style={{ textAlign: 'right', paddingBottom : "20px" }}>
+        <Button type="primary" onClick={() => navigate(-1)}>
+          Quay lại
+        </Button>
+      </div>
+      </div>
 
   )
 }
