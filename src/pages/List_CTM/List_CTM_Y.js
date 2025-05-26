@@ -3,21 +3,22 @@ import Header_Y from "../../Components/Layout/Header_Y";
 import handle_error from "../../Components/Piece/handle_error"
 import authorize from "../../Components/helper/authorize_Y";
 import Seturl from "../../Components/helper/SetURL";
+import PaginationCustom from "../../Components/Piece/pagination";
 
 import { useState, useEffect, useRef } from "react";
-import { Table, Card, Modal, Button, Select, Tooltip, Form, DatePicker, Col, Row, Checkbox, Empty, Descriptions, Avatar, Divider, Tag } from 'antd';
-import { GetALLCTM, DeletedCTM, ChangeCTM, Postfinger } from "../../service/CTM_Y.service";
+import { Table, Card, Modal, Button, Select, Tooltip, Form, DatePicker, Col, Row, Checkbox, Empty, Descriptions, Divider } from 'antd';
+import { GetALLCTM, DeletedCTM, ChangeCTM, Postfinger, GetALLExcel } from "../../service/CTM_Y.service";
 import { GetAllPackage } from "../../service/Package_Y.service";
 import { GetAllService } from "../../service/Service_Y.service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faPlus, faMagnifyingGlass,faPenRuler, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faPlus, faMagnifyingGlass,faPenRuler, faTrashCan,faFileExcel} from "@fortawesome/free-solid-svg-icons";
 import { AlertAgree, AlertSuccess } from "../../Components/Piece/Alert";
 import { PostCTM_PK } from "../../service/CTM_PK_Y.service";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectRole, selectPermission } from "../../Redux/UserRedux_Y";
 import { PostCTM_SV } from "../../service/CTM_SV_Y.service";
-import PaginationCustom from "../../Components/Piece/pagination";
+
 function List_customer() {
   const navigate = useNavigate()
   const permission = useSelector(selectPermission)
@@ -47,7 +48,9 @@ function List_customer() {
 
   const [pagination, setpagination] = useState(1)
   let arraycheck = useRef([])
+
   authorize(permission, "view_customer", navigate, role)
+  
   const categories =
     [
       { value: 'active', label: 'Hoạt Động' },
@@ -364,7 +367,6 @@ function List_customer() {
     setDates(dateString)
   }
 
-
   const deleted_CTM = async (e) => {
     const check = await AlertAgree("Bạn có muốn Xóa Không", "Đồng Ý", "Xác Nhận hành Động")
     if (check.isConfirmed) {
@@ -405,6 +407,20 @@ function List_customer() {
     setisisModalcustomer(false)
     Seturl({ title: 'key', value: e })
     FetchAPI()
+  }
+
+  const export_excel = async() => {
+    const blob = await GetALLExcel();
+
+    if (!blob) return alert("Lỗi xuất file!");
+  
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'Danh Sách Khách Hàng.xlsx'); 
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
   }
   useEffect(() => {
     FetchAPI()
@@ -539,6 +555,8 @@ function List_customer() {
                 </div>}
 
                 <div>
+                   {role == "admin" && <Tooltip title="Xuất Danh Sách Khách Hàng" color="#FA541C"><Button onClick={export_excel} style={{marginRight : "5px"}} type="primary" ><FontAwesomeIcon icon={faFileExcel} /></Button></Tooltip>}
+ 
                   <Button onClick={handle_finger} type="primary" >Kiểm Tra</Button>
 
                   {(permission?.includes("create_customer") || role == "admin") &&

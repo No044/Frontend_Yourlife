@@ -1,5 +1,4 @@
 const domain = process.env.REACT_APP_BACKEND_URL;
-console.log("===domain:", domain);
 
 export const GetData = async (path) => {
   try {
@@ -14,7 +13,7 @@ export const GetData = async (path) => {
 
     return await response.json();
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return {
       status: false,
       type: "Auth",
@@ -67,5 +66,20 @@ export const PatchData = async (path, option) => {
       error: 600,
       data: null,
     };
+  }
+};
+
+export const GetExcel = async (path) => {
+  try {
+    const response = await fetch(domain + path, {
+      method: "GET",
+      credentials: "include",
+    });
+
+    const blob = await response.blob();
+    return blob;
+  } catch (error) {
+    console.log(error);
+    return null;
   }
 };

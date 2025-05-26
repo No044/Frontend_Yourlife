@@ -102,7 +102,7 @@ function Detail_CTM() {
   }
 
   const handle_update_idfinger = async (e) => {
-    const respond = await updatefinger({id : id})
+    const respond = await updatefinger({id : e})
     if(respond.status == true){
       AlertSuccess("Thao Tác Thành Công")
       FetchAPI()

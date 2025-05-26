@@ -1,4 +1,4 @@
-import { GetData, PostData, PatchData } from "../Utils/Request"
+import { GetData, PostData, PatchData, GetExcel } from "../Utils/Request"
 import GetUrl from "../Components/helper/GetURL"
 export const GetALLCTM = async () => {
     const page = GetUrl("page") || 1;
@@ -24,7 +24,7 @@ export const Postfinger = async (option) => {
 }
 
 export const updatefinger = async (option) => {
-    const data = await GetData(`CTM/updatefinger`,option)
+    const data = await PatchData(`CTM/updatefinger`,option)
     return data
 }
 
@@ -42,3 +42,9 @@ export const ChangeCTM = async (option) => {
     const data = await PatchData(`CTM/changeStatus`, option)
     return data
 }
+
+export const GetALLExcel = async () => {
+    const data = await GetExcel(`CTM/excel`)
+    return data
+}
+

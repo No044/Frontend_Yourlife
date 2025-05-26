@@ -89,7 +89,7 @@ function Slider({ sidebarCollapsed, onToggleSidebar }) {
                 )
               }
               {
-                (permission.find(item => item === "view_manager") || role == "admin") && (
+                ( role == "admin") && (
                   <li className="pc-item">
                     <NavLink to="/user" className="pc-link">
                       <span className="pc-micon">
@@ -101,7 +101,7 @@ function Slider({ sidebarCollapsed, onToggleSidebar }) {
                 )
               }
               {
-                (permission.find(item => item === "view_manager") || role == "admin") && (
+                ( role == "admin") && (
                   <li className="pc-item">
                     <NavLink to="/role" className="pc-link">
                       <span className="pc-micon">
@@ -123,7 +123,7 @@ function Slider({ sidebarCollapsed, onToggleSidebar }) {
                 </li>)
               }
               {
-                (permission.find(item => item === "view_chart") || role == "admin") && (
+                ( role == "admin") && (
                   <li className="pc-item">
                     <NavLink to="/chart" className="pc-link">
                       <span className="pc-micon">
@@ -137,7 +137,7 @@ function Slider({ sidebarCollapsed, onToggleSidebar }) {
 
 
               {
-                (permission.find(item => item === "view_advise") || role == "admin") && (
+                (role == "admin") && (
                   <li className="pc-item">
                     <NavLink to="/history" className="pc-link">
                       <span className="pc-micon">
